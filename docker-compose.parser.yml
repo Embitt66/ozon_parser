@@ -1,0 +1,18 @@
+services:
+  selenium:
+    image: selenium/standalone-chrome:latest
+    restart: unless-stopped
+    shm_size: 2gb
+
+  parser:
+    build: .
+    restart: unless-stopped
+    command: ["python", "-m", "app.parser_main"]
+    env_file:
+      - .env.parser
+    environment:
+      SELENIUM_REMOTE_URL: http://selenium:4444/wd/hub
+    depends_on:
+      - selenium
+    ports:
+      - "8001:8000"
